@@ -1,122 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+
+import ProcessForm from "./components/ProcessForm";
+import ProcessTable from "./components/ProcessTable";
+import GanttChart from "./components/GanttChart";
+import AlgorithmSelector from "./components/AlgorithmSelector";
+import MetricsTable from "./components/MetricsTable";
+import { sjf } from "./algorithms/sjf";
+
+import { fcfs } from "./algorithms/fcfs";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [processes, setProcesses] = useState([]);
+  const [ganttData, setGanttData] = useState([]);
+  const [algorithm, setAlgorithm] = useState("FCFS");
+  const [metrics, setMetrics] = useState([]);
+  const [averages, setAverages] = useState(null);
+
+  const addProcess = (process) => {
+    setProcesses((prev) => [...prev, process]);
+  };
+
+  const runSimulation = () => {
+    if (processes.length === 0) {
+      alert("Please add at least one process.");
+      return;
+    }
+
+    let result;
+
+    switch (algorithm) {
+      case "FCFS":
+        result = fcfs(processes);
+
+        setGanttData(result.gantt);
+        setMetrics(result.metrics);
+        setAverages(result.averages);
+        break;
+
+      case "SJF":
+        result = sjf(processes);
+        break;
+
+      case "SRT":
+        alert("SRT not implemented yet");
+        return;
+
+      case "RR":
+        alert("RR not implemented yet");
+        return;
+
+      case "MLFQ":
+        alert("MLFQ not implemented yet");
+        return;
+
+      default:
+        return;
+    }
+    setGanttData(result.gantt);
+    setMetrics(result.metrics);
+    setAverages(result.averages);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div>
+      <h1>CPU Scheduling Simulator</h1>
 
-      <div className="ticks"></div>
+      <ProcessForm addProcess={addProcess} />
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <ProcessTable processes={processes} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <AlgorithmSelector algorithm={algorithm} setAlgorithm={setAlgorithm} />
+
+      <button onClick={runSimulation}>Run Simulation</button>
+      <h2>Current Algorithm: {algorithm}</h2>
+      <GanttChart data={ganttData} />
+      <MetricsTable metrics={metrics} averages={averages} />
+    </div>
+  );
 }
 
-export default App
+export default App;
