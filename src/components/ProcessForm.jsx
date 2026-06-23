@@ -27,12 +27,6 @@ function ProcessForm({ addProcess }) {
         onChange={(e) => setPid(e.target.value)}
       />
 
-      <input
-        type="number"
-        placeholder="Arrival"
-        value={arrival}
-        onChange={(e) => setArrival(e.target.value)}
-      />
 
       <input
         type="number"
