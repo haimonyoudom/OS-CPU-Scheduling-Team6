@@ -1,18 +1,21 @@
 function AlgorithmSelector({ algorithm, setAlgorithm }) {
-  return (
-    <div>
-      <label>Select Algorithm: </label>
+  const options = ["FCFS", "SJF", "RR", "SRT", "MLFQ"];
 
-      <select
-        value={algorithm}
-        onChange={(e) => setAlgorithm(e.target.value)}
-      >
-        <option value="FCFS">FCFS</option>
-        <option value="SJF">SJF</option>
-        <option value="SRT">SRT</option>
-        <option value="RR">RR</option>
-        <option value="MLFQ">MLFQ</option>
-      </select>
+  return (
+    <div className="selector-group">
+      {options.map((option) => (
+        <button
+          key={option}
+          type="button"
+          className={`selector-btn ${algorithm === option ? "active" : ""}`}
+          onClick={() => setAlgorithm(option)}
+        >
+          {option}
+        </button>
+      ))}
+      <p className="selector-caption">
+        All major scheduling strategies are now available for simulation.
+      </p>
     </div>
   );
 }
