@@ -8,10 +8,24 @@ function ProcessForm({ addProcess }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const parsedArrival = Number(arrival);
+    const parsedBurst = Number(burst);
+
+    if (
+      !pid.trim() ||
+      !Number.isFinite(parsedArrival) ||
+      !Number.isFinite(parsedBurst) ||
+      parsedArrival < 0 ||
+      parsedBurst <= 0
+    ) {
+      alert("Please enter a valid PID, arrival time, and burst time.");
+      return;
+    }
+
     addProcess({
-      pid,
-      arrival: Number(arrival),
-      burst: Number(burst),
+      pid: pid.trim(),
+      arrival: parsedArrival,
+      burst: parsedBurst,
     });
 
     setPid("");
@@ -20,29 +34,40 @@ function ProcessForm({ addProcess }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        placeholder="PID"
-        value={pid}
-        onChange={(e) => setPid(e.target.value)}
-      />
+    <form className="process-form" onSubmit={handleSubmit}>
+      <label>
+        <span>PID</span>
+        <input
+          placeholder="P1"
+          value={pid}
+          onChange={(e) => setPid(e.target.value)}
+        />
+      </label>
 
-      <input
-        type="number"
-        placeholder="Arrival"
-        value={arrival}
-        onChange={(e) => setArrival(e.target.value)}
-      />
+      <label>
+        <span>Arrival</span>
+        <input
+          type="number"
+          min="0"
+          placeholder="0"
+          value={arrival}
+          onChange={(e) => setArrival(e.target.value)}
+        />
+      </label>
 
-      <input
-        type="number"
-        placeholder="Burst"
-        value={burst}
-        onChange={(e) => setBurst(e.target.value)}
-      />
+      <label>
+        <span>Burst</span>
+        <input
+          type="number"
+          min="1"
+          placeholder="4"
+          value={burst}
+          onChange={(e) => setBurst(e.target.value)}
+        />
+      </label>
 
-      <button type="submit">
-        Add Process
+      <button className="primary-btn" type="submit">
+        Add process
       </button>
     </form>
   );

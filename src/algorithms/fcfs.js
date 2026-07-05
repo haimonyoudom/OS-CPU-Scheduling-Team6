@@ -1,18 +1,13 @@
-import { calculateMetrics, calculateAverages } from "../utils/metrics";
+import { calculateMetrics, calculateAverages } from "../utils/metrics.js";
 
 export function fcfs(processes) {
-  const sorted = [...processes].sort(
-    (a, b) => a.arrival - b.arrival
-  );
+  const sorted = [...processes].sort((a, b) => a.arrival - b.arrival);
 
   let currentTime = 0;
   const gantt = [];
 
   sorted.forEach((process) => {
-    const start = Math.max(
-      currentTime,
-      process.arrival
-    );
+    const start = Math.max(currentTime, process.arrival);
 
     const end = start + process.burst;
 
@@ -25,14 +20,9 @@ export function fcfs(processes) {
     currentTime = end;
   });
 
-  const metrics = calculateMetrics(
-    processes,
-    gantt
-  );
+  const metrics = calculateMetrics(processes, gantt);
 
-  const averages = calculateAverages(
-    metrics
-  );
+  const averages = calculateAverages(metrics);
 
   return {
     gantt,

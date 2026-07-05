@@ -1,7 +1,4 @@
-import {
-  calculateMetrics,
-  calculateAverages,
-} from "../utils/metrics";
+import { calculateMetrics, calculateAverages } from "../utils/metrics.js";
 
 export function sjf(processes) {
   const gantt = [];
@@ -11,9 +8,7 @@ export function sjf(processes) {
   let currentTime = 0;
 
   while (remaining.length > 0) {
-    const ready = remaining.filter(
-      (p) => p.arrival <= currentTime
-    );
+    const ready = remaining.filter((p) => p.arrival <= currentTime);
 
     // CPU idle
     if (ready.length === 0) {
@@ -21,16 +16,13 @@ export function sjf(processes) {
       continue;
     }
 
-    ready.sort(
-      (a, b) => a.burst - b.burst
-    );
+    ready.sort((a, b) => a.burst - b.burst);
 
     const process = ready[0];
 
     const start = currentTime;
 
-    const end =
-      currentTime + process.burst;
+    const end = currentTime + process.burst;
 
     gantt.push({
       pid: process.pid,
@@ -40,18 +32,14 @@ export function sjf(processes) {
 
     currentTime = end;
 
-    const index = remaining.findIndex(
-      (p) => p.pid === process.pid
-    );
+    const index = remaining.findIndex((p) => p.pid === process.pid);
 
     remaining.splice(index, 1);
   }
 
-  const metrics =
-    calculateMetrics(processes, gantt);
+  const metrics = calculateMetrics(processes, gantt);
 
-  const averages =
-    calculateAverages(metrics);
+  const averages = calculateAverages(metrics);
 
   return {
     gantt,
