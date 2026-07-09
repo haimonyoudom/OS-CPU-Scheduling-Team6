@@ -1,4 +1,4 @@
-function ProcessTable({ processes }) {
+function ProcessTable({ processes, onDeleteProcess }) {
   if (processes.length === 0) {
     return (
       <div className="empty-state">
@@ -16,15 +16,25 @@ function ProcessTable({ processes }) {
             <th>PID</th>
             <th>Arrival</th>
             <th>Burst</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {processes.map((p) => (
-            <tr key={`${p.pid}-${p.arrival}-${p.burst}`}>
+          {processes.map((p, index) => (
+            <tr key={`${p.pid}-${p.arrival}-${p.burst}-${index}`}>
               <td>{p.pid}</td>
               <td>{p.arrival}</td>
               <td>{p.burst}</td>
+              <td>
+                <button
+                  type="button"
+                  className="delete-btn"
+                  onClick={() => onDeleteProcess?.(index)}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
