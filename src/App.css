@@ -72,6 +72,7 @@
 .results-grid {
   display: grid;
   gap: 1.25rem;
+  min-width: 0;
 }
 
 .dashboard-grid {
@@ -84,10 +85,12 @@
 
 .panel {
   padding: 1.25rem;
+  min-width: 0;
 }
 
 .wide-panel {
   min-height: 100%;
+  min-width: 0;
 }
 
 .panel-heading {
@@ -115,11 +118,36 @@
 .process-form input,
 .selector-btn,
 .primary-btn,
-.secondary-btn {
+.secondary-btn,
+.quantum-row input,
+.delete-btn {
   border-radius: 12px;
   border: 1px solid #dbeafe;
   padding: 0.75rem 0.9rem;
   font: inherit;
+}
+
+.quantum-row {
+  margin: 1rem 0;
+}
+
+.quantum-row label {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.delete-btn {
+  background: #f43f5e;
+  color: white;
+  border: none;
+  padding: 0.55rem 0.8rem;
+}
+
+.delete-btn:hover {
+  background: #e11d48;
 }
 
 .process-form input:focus {
@@ -229,9 +257,21 @@
   gap: 0.65rem;
 }
 
+.gantt-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.gantt-chart {
+  display: inline-block;
+  min-width: 520px;
+}
+
 .gantt-axis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
   gap: 0.2rem;
   font-size: 0.8rem;
   color: #64748b;

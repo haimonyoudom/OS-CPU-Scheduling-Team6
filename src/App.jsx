@@ -16,6 +16,7 @@ function App() {
   const [processes, setProcesses] = useState([]);
   const [ganttData, setGanttData] = useState([]);
   const [algorithm, setAlgorithm] = useState("FCFS");
+  const [rrQuantum, setRrQuantum] = useState(2);
   const [metrics, setMetrics] = useState([]);
   const [averages, setAverages] = useState(null);
   const [lastRun, setLastRun] = useState(null);
@@ -24,12 +25,17 @@ function App() {
     setProcesses((prev) => [...prev, process]);
   };
 
+  const deleteProcess = (indexToRemove) => {
+    setProcesses((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
   const resetSimulation = () => {
     setProcesses([]);
     setGanttData([]);
     setMetrics([]);
     setAverages(null);
     setLastRun(null);
+    setRrQuantum(2);
   };
 
   const runSimulation = () => {
@@ -48,7 +54,7 @@ function App() {
         result = sjf(processes);
         break;
       case "RR":
-        result = rr(processes, 2);
+        result = rr(processes, rrQuantum);
         break;
       case "SRT":
         result = srt(processes);
@@ -105,7 +111,7 @@ function App() {
           </div>
 
           <ProcessForm addProcess={addProcess} />
-          <ProcessTable processes={processes} />
+          <ProcessTable processes={processes} onDeleteProcess={deleteProcess} />
         </section>
 
         <section className="panel">
@@ -120,6 +126,22 @@ function App() {
             algorithm={algorithm}
             setAlgorithm={setAlgorithm}
           />
+
+          {algorithm === "RR" && (
+            <div className="quantum-row">
+              <label>
+                <span>Time Quantum</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={rrQuantum}
+                  onChange={(e) =>
+                    setRrQuantum(Math.max(1, Number(e.target.value) || 1))
+                  }
+                />
+              </label>
+            </div>
+          )}
 
           <div className="action-row">
             <button className="primary-btn" onClick={runSimulation}>
