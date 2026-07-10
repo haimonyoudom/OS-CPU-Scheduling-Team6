@@ -80,7 +80,7 @@
 }
 
 .results-grid {
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 
 .panel {
@@ -257,23 +257,16 @@
   gap: 0.65rem;
 }
 
-.gantt-scroll {
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+.gantt-chart {
   width: 100%;
   max-width: 100%;
 }
 
-.gantt-chart {
-  display: inline-block;
-  min-width: 520px;
-}
-
 .gantt-axis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(32px, 1fr));
   gap: 0.2rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #64748b;
   padding-left: 72px;
 }

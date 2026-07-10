@@ -39,7 +39,7 @@ export function sjf(processes) {
 
   const metrics = calculateMetrics(processes, gantt);
 
-  const averages = calculateAverages(metrics);
+  const averages = calculateAverages(metrics, processes, gantt);
 
   return {
     gantt,

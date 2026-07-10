@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-function ProcessForm({ addProcess }) {
-  const [pid, setPid] = useState("");
+function ProcessForm({ addProcess, processCount }) {
   const [arrival, setArrival] = useState("");
   const [burst, setBurst] = useState("");
+  const nextPid = `P${processCount + 1}`;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -12,23 +12,21 @@ function ProcessForm({ addProcess }) {
     const parsedBurst = Number(burst);
 
     if (
-      !pid.trim() ||
       !Number.isFinite(parsedArrival) ||
       !Number.isFinite(parsedBurst) ||
       parsedArrival < 0 ||
       parsedBurst <= 0
     ) {
-      alert("Please enter a valid PID, arrival time, and burst time.");
+      alert("Please enter a valid arrival time and burst time.");
       return;
     }
 
     addProcess({
-      pid: pid.trim(),
+      pid: nextPid,
       arrival: parsedArrival,
       burst: parsedBurst,
     });
 
-    setPid("");
     setArrival("");
     setBurst("");
   };
@@ -37,11 +35,7 @@ function ProcessForm({ addProcess }) {
     <form className="process-form" onSubmit={handleSubmit}>
       <label>
         <span>PID</span>
-        <input
-          placeholder="P1"
-          value={pid}
-          onChange={(e) => setPid(e.target.value)}
-        />
+        <input disabled value={nextPid} />
       </label>
 
       <label>
