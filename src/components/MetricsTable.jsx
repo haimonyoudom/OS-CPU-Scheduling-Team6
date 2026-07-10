@@ -23,6 +23,14 @@ function MetricsTable({ metrics, averages }) {
             <span>Average RT</span>
             <strong>{averages.responseTime.toFixed(2)}</strong>
           </div>
+          <div className="metric-card">
+            <span>Throughput</span>
+            <strong>{averages.throughput.toFixed(2)}</strong>
+          </div>
+          <div className="metric-card">
+            <span>CPU Utilization</span>
+            <strong>{averages.cpuUtilization.toFixed(2)}%</strong>
+          </div>
         </div>
       )}
 

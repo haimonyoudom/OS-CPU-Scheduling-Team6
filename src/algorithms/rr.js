@@ -50,7 +50,7 @@ export function rr(processes, quantum = 2) {
   }
 
   const metrics = calculateMetrics(processes, gantt);
-  const averages = calculateAverages(metrics);
+  const averages = calculateAverages(metrics, processes, gantt);
 
   return { gantt, metrics, averages };
 }

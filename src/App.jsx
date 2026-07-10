@@ -110,7 +110,10 @@ function App() {
             </div>
           </div>
 
-          <ProcessForm addProcess={addProcess} />
+          <ProcessForm
+            addProcess={addProcess}
+            processCount={processes.length}
+          />
           <ProcessTable processes={processes} onDeleteProcess={deleteProcess} />
         </section>
 
