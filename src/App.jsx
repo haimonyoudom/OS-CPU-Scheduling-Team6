@@ -17,6 +17,12 @@ function App() {
   const [ganttData, setGanttData] = useState([]);
   const [algorithm, setAlgorithm] = useState("FCFS");
   const [rrQuantum, setRrQuantum] = useState(2);
+  const [mlfqQueueCount, setMlfqQueueCount] = useState(3);
+  const [mlfqQueues, setMlfqQueues] = useState([
+    { policy: "RR", quantum: 2 },
+    { policy: "RR", quantum: 4 },
+    { policy: "RR", quantum: 8 },
+  ]);
   const [metrics, setMetrics] = useState([]);
   const [averages, setAverages] = useState(null);
   const [lastRun, setLastRun] = useState(null);
@@ -36,6 +42,41 @@ function App() {
     setAverages(null);
     setLastRun(null);
     setRrQuantum(2);
+    setMlfqQueueCount(3);
+    setMlfqQueues([
+      { policy: "RR", quantum: 2 },
+      { policy: "RR", quantum: 4 },
+      { policy: "RR", quantum: 8 },
+    ]);
+  };
+
+  const updateMlfqQueue = (index, updates) => {
+    setMlfqQueues((prev) =>
+      prev.map((queue, queueIndex) =>
+        queueIndex === index ? { ...queue, ...updates } : queue,
+      ),
+    );
+  };
+
+  const updateMlfqQueueCount = (value) => {
+    const nextCount = Math.min(5, Math.max(1, Number(value) || 1));
+    setMlfqQueueCount(nextCount);
+    setMlfqQueues((prev) => {
+      if (prev.length < nextCount) {
+        const nextQueues = [...prev];
+
+        while (nextQueues.length < nextCount) {
+          nextQueues.push({
+            policy: "RR",
+            quantum: Math.max(1, nextQueues.length + 1),
+          });
+        }
+
+        return nextQueues;
+      }
+
+      return prev.slice(0, nextCount);
+    });
   };
 
   const runSimulation = () => {
@@ -60,7 +101,7 @@ function App() {
         result = srt(processes);
         break;
       case "MLFQ":
-        result = mlfq(processes);
+        result = mlfq(processes, mlfqQueues.slice(0, mlfqQueueCount));
         break;
       default:
         alert(`${algorithm} is coming soon.`);
@@ -72,6 +113,9 @@ function App() {
     setAverages(result.averages);
     setLastRun({ algorithm, processCount: processes.length });
   };
+
+  const showRrConfig = algorithm === "RR";
+  const showMlfqConfig = algorithm === "MLFQ";
 
   return (
     <div className="app-shell">
@@ -130,7 +174,7 @@ function App() {
             setAlgorithm={setAlgorithm}
           />
 
-          {algorithm === "RR" && (
+          {showRrConfig && (
             <div className="quantum-row">
               <label>
                 <span>Time Quantum</span>
@@ -144,6 +188,63 @@ function App() {
                 />
               </label>
             </div>
+          )}
+
+          {showMlfqConfig && (
+            <>
+              <div className="quantum-row">
+                <label>
+                  <span>Number of queues</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    value={mlfqQueueCount}
+                    onChange={(e) => updateMlfqQueueCount(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              {mlfqQueues.slice(0, mlfqQueueCount).map((queue, index) => (
+                <div key={`${queue.policy}-${index}`} className="quantum-row">
+                  <label>
+                    <span>Queue {index + 1} policy</span>
+                    <select
+                      value={queue.policy}
+                      onChange={(e) =>
+                        updateMlfqQueue(index, { policy: e.target.value })
+                      }
+                    >
+                      <option value="FCFS">FCFS</option>
+                      <option value="RR">RR</option>
+                      <option value="SJF">SJF</option>
+                    </select>
+                  </label>
+
+                  {queue.policy === "RR" && (
+                    <label>
+                      <span>Queue {index + 1} quantum</span>
+                      <input
+                        type="number"
+                        min="1"
+                        value={queue.quantum}
+                        onChange={(e) =>
+                          updateMlfqQueue(index, {
+                            quantum: Math.max(1, Number(e.target.value) || 1),
+                          })
+                        }
+                      />
+                    </label>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+
+          {!showRrConfig && !showMlfqConfig && (
+            <p className="selector-caption">
+              No extra parameters are needed for FCFS, SJF, or SRT.
+            </p>
           )}
 
           <div className="action-row">

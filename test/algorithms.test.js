@@ -34,3 +34,10 @@ test("multilevel feedback queue returns gantt and metrics", () => {
   assert.equal(result.metrics.length, sampleProcesses.length);
   assert.ok(result.averages);
 });
+
+test("multilevel feedback queue honors custom queue policies", () => {
+  const result = mlfq(sampleProcesses, [{ policy: "FCFS" }]);
+
+  assert.equal(result.gantt.filter((entry) => entry.pid === "P1").length, 1);
+  assert.equal(result.metrics.length, sampleProcesses.length);
+});
